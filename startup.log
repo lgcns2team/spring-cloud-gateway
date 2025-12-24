@@ -1,0 +1,66 @@
+> Task :clean
+
+> Task :compileJava FAILED
+/Users/hyungjunehong/Documents/history_ai/gateway/src/main/java/com/khistory/gateway/config/SecurityConfig.java:5: error: package org.springframework.security.config.annotation.web.reactive does not exist
+import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
+                                                                  ^
+/Users/hyungjunehong/Documents/history_ai/gateway/src/main/java/com/khistory/gateway/config/SecurityConfig.java:6: error: package org.springframework.security.config.web.server does not exist
+import org.springframework.security.config.web.server.ServerHttpSecurity;
+                                                     ^
+/Users/hyungjunehong/Documents/history_ai/gateway/src/main/java/com/khistory/gateway/config/SecurityConfig.java:7: error: package org.springframework.security.web.server does not exist
+import org.springframework.security.web.server.SecurityWebFilterChain;
+                                              ^
+/Users/hyungjunehong/Documents/history_ai/gateway/src/main/java/com/khistory/gateway/config/SecurityConfig.java:10: error: cannot find symbol
+@EnableWebFluxSecurity
+ ^
+  symbol: class EnableWebFluxSecurity
+/Users/hyungjunehong/Documents/history_ai/gateway/src/main/java/com/khistory/gateway/config/SecurityConfig.java:14: error: cannot find symbol
+    public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) {
+                                                            ^
+  symbol:   class ServerHttpSecurity
+  location: class SecurityConfig
+/Users/hyungjunehong/Documents/history_ai/gateway/src/main/java/com/khistory/gateway/config/SecurityConfig.java:14: error: cannot find symbol
+    public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) {
+           ^
+  symbol:   class SecurityWebFilterChain
+  location: class SecurityConfig
+6 errors
+
+[Incubating] Problems report is available at: file:///Users/hyungjunehong/Documents/history_ai/gateway/build/reports/problems/problems-report.html
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':compileJava'.
+> Compilation failed; see the compiler output below.
+  /Users/hyungjunehong/Documents/history_ai/gateway/src/main/java/com/khistory/gateway/config/SecurityConfig.java:14: error: cannot find symbol
+      public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) {
+                                                              ^
+    symbol:   class ServerHttpSecurity
+    location: class SecurityConfig
+  /Users/hyungjunehong/Documents/history_ai/gateway/src/main/java/com/khistory/gateway/config/SecurityConfig.java:14: error: cannot find symbol
+      public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) {
+             ^
+    symbol:   class SecurityWebFilterChain
+    location: class SecurityConfig
+  /Users/hyungjunehong/Documents/history_ai/gateway/src/main/java/com/khistory/gateway/config/SecurityConfig.java:10: error: cannot find symbol
+  @EnableWebFluxSecurity
+   ^
+    symbol: class EnableWebFluxSecurity
+  /Users/hyungjunehong/Documents/history_ai/gateway/src/main/java/com/khistory/gateway/config/SecurityConfig.java:5: error: package org.springframework.security.config.annotation.web.reactive does not exist
+  import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
+                                                                    ^
+  /Users/hyungjunehong/Documents/history_ai/gateway/src/main/java/com/khistory/gateway/config/SecurityConfig.java:6: error: package org.springframework.security.config.web.server does not exist
+  import org.springframework.security.config.web.server.ServerHttpSecurity;
+                                                       ^
+  /Users/hyungjunehong/Documents/history_ai/gateway/src/main/java/com/khistory/gateway/config/SecurityConfig.java:7: error: package org.springframework.security.web.server does not exist
+  import org.springframework.security.web.server.SecurityWebFilterChain;
+                                                ^
+  6 errors
+
+* Try:
+> Check your code and dependencies to fix the compilation error(s)
+> Run with --scan to get full insights.
+
+BUILD FAILED in 3s
+2 actionable tasks: 2 executed
