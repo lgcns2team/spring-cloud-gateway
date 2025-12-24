@@ -1,5 +1,5 @@
 server:
-  port: 8081  # ⚠️ Gateway는 8081 포트 (외부 노출)
+  port: 8080  # ALB Target Group 포트
 
 spring:
   application:
@@ -8,11 +8,11 @@ spring:
   cloud:
     gateway:
       routes:
-        # FastAPI 라우팅 (AI)
+        # FastAPI 라우팅 (AI) - 최우선 순위
         - id: fastapi-service
           uri: http://${FASTAPI_HOST:localhost}:${FASTAPI_PORT:8000}
           predicates:
-            # - Path=/api/ai/**
+            - Path=/api/ai/**
           filters:
             - StripPrefix=2  # /api/ai/chat → /chat
             - name: RequestRateLimiter
@@ -21,7 +21,7 @@ spring:
                   replenishRate: 50
                   burstCapacity: 100
         
-        # Spring Boot 라우팅 (Backend)
+        # Spring Boot 라우팅 (Backend) - 나머지 API
         - id: springboot-service
           uri: http://${SPRINGBOOT_HOST:localhost}:${SPRINGBOOT_PORT:8080}
           predicates:
@@ -37,17 +37,22 @@ spring:
         cors-configurations:
           '[/**]':
             allowedOrigins:
-              # 프로덕션 도메인
+              # 프로덕션 CloudFront
+              - "https://*.cloudfront.net"
+              
+              # ALB 도메인 (AWS 내부 통신)
+              - "http://*.elb.amazonaws.com"
+              - "https://*.elb.amazonaws.com"
+              
+              # 커스텀 도메인 (Route53 사용 시)
               - "https://khistoryai.com"
               - "https://www.khistoryai.com"
-              
-              # CloudFront 도메인 (S3 연결됨)
-              - "https://*.cloudfront.net"
               
               # 로컬 개발용
               - "http://localhost:3000"
               - "http://localhost:5173"  # Vite
               - "http://127.0.0.1:3000"
+              - "http://127.0.0.1:5173"
               
             allowedMethods:
               - GET
@@ -60,16 +65,17 @@ spring:
             allowCredentials: true
             maxAge: 3600
   
-  # Redis 설정 (Rate Limiting용)
-  redis:
-    host: ${SPRING_REDIS_HOST:localhost}
-    port: ${SPRING_REDIS_PORT:6379}
-    timeout: 2000ms
-    lettuce:
-      pool:
-        max-active: 8
-        max-idle: 8
-        min-idle: 2
+  # Redis 설정 (ElastiCache)
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+      timeout: 2000ms
+      lettuce:
+        pool:
+          max-active: 8
+          max-idle: 8
+          min-idle: 2
 
 # Actuator (헬스체크)
 management:

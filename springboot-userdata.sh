@@ -72,9 +72,10 @@ services:
       - SPRING_REDIS_HOST=${redis_host}
       - SPRING_REDIS_PORT=6379
       - SPRINGBOOT_HOST=${springboot_host}
-      - SPRINGBOOT_PORT=8081
+      - SPRINGBOOT_PORT=8080
       - FASTAPI_HOST=${fastapi_host}
       - FASTAPI_PORT=8000
+      - S3_WEBSITE_URL=${s3_website_url}
       - AWS_REGION=${aws_region}
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8081/actuator/health"]
