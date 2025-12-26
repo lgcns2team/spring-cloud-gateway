@@ -1,5 +1,5 @@
 server:
-  port: 8080  # ALB Target Group 포트
+  port: 8080
 
 spring:
   application:
@@ -8,92 +8,32 @@ spring:
   cloud:
     gateway:
       routes:
-        # FastAPI 라우팅 (AI) - 최우선 순위
+        # Python Service (AI)
         - id: ai-service
           uri: http://${DJANGO_HOST:localhost}:${DJANGO_PORT:8000}
           predicates:
-            - Path=/api/ai/**
+            - Path=/api/ai/**, /api/v1/python/**
           filters:
-            - StripPrefix=2  # /api/ai/chat → /chat
-        # Spring Boot 라우팅 (Backend) - 나머지 API
+            # - StripPrefix=1 
+
+        # Java Backend Service
         - id: backend-service
           uri: http://${BACKEND_HOST:localhost}:${BACKEND_PORT:8081}
           predicates:
             - Path=/api/**, /auth/**
           filters: []
-      # --- CORS 설정 시작! ---
-      globalcors:
-        add-to-simple-url-handler-mapping: true # 이 옵션을 추가하면 더 확실해!
-        cors-configurations:
-          '[/**]':
-            allowedOrigins:
-              - "https://*.cloudfront.net"
-              - "https://*.elb.amazonaws.com"
-              - "http://*.elb.amazonaws.com"
-              - "https://khistoryai.com"
-              - "https://www.khistoryai.com"
-              - "http://localhost:3000"
-              - "http://localhost:5173"  # Vite (지금 쓰고 있는 거!)
-              - "http://127.0.0.1:3000"
-              - "http://127.0.0.1:5173"
-            allowedMethods:
-              - GET
-              - POST
-              - PUT
-              - DELETE
-              - PATCH
-              - OPTIONS
-            allowedHeaders: "*"
-            allowCredentials: true
-            maxAge: 3600
+
       default-filters:
         - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials
-      # --- CORS 설정 끝 ---
-      # globalcors:
-      #   cors-configurations:
-      #     '[/**]':
-      #       allowedOrigins:
-      #         # 프로덕션 CloudFront
-      #         - "https://*.cloudfront.net"
-              
-      #         # ALB 도메인 (AWS 내부 통신)
-      #         - "http://*.elb.amazonaws.com"
-      #         - "https://*.elb.amazonaws.com"
-              
-      #         # 커스텀 도메인 (Route53 사용 시)
-      #         - "https://khistoryai.com"
-      #         - "https://www.khistoryai.com"
-              
-      #         # 로컬 개발용
-      #         - "http://localhost:3000"
-      #         - "http://localhost:5173"  # Vite
-      #         - "http://127.0.0.1:3000"
-      #         - "http://127.0.0.1:5173"
-              
-      #       allowedMethods:
-      #         - GET
-      #         - POST
-      #         - PUT
-      #         - DELETE
-      #         - PATCH
-      #         - OPTIONS
-      #       allowedHeaders: "*"
-      #       allowCredentials: true
-      #       maxAge: 3600
-  
-  # Redis 설정 (ElastiCache)
+
+  # Redis (Rate Limiting)
   data:
     redis:
       host: ${REDIS_HOST:localhost}
       port: ${REDIS_PORT:6379}
       timeout: 2000ms
-      lettuce:
-        pool:
-          max-active: 8
-          max-idle: 8
-          min-idle: 2
 
-# Actuator (헬스체크)
+# Actuator
 management:
   endpoints:
     web:
@@ -105,6 +45,11 @@ management:
 
 logging:
   level:
-    org.springframework.cloud.gateway: INFO
-    reactor.netty: WARN
+    org.springframework.cloud.gateway: TRACE
+    org.springframework.http.server.reactive: DEBUG
     org.springframework.web: DEBUG
+    reactor.netty: DEBUG
+    com.khistory.gateway: DEBUG
+
+jwt:
+  secret: ${JWT_SECRET_KEY}
