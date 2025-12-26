@@ -21,7 +21,34 @@ spring:
           predicates:
             - Path=/api/**, /auth/**
           filters: []
-      
+      # --- CORS 설정 시작! ---
+      globalcors:
+        add-to-simple-url-handler-mapping: true # 이 옵션을 추가하면 더 확실해!
+        cors-configurations:
+          '[/**]':
+            allowedOrigins:
+              - "https://*.cloudfront.net"
+              - "https://*.elb.amazonaws.com"
+              - "http://*.elb.amazonaws.com"
+              - "https://khistoryai.com"
+              - "https://www.khistoryai.com"
+              - "http://localhost:3000"
+              - "http://localhost:5173"  # Vite (지금 쓰고 있는 거!)
+              - "http://127.0.0.1:3000"
+              - "http://127.0.0.1:5173"
+            allowedMethods:
+              - GET
+              - POST
+              - PUT
+              - DELETE
+              - PATCH
+              - OPTIONS
+            allowedHeaders: "*"
+            allowCredentials: true
+            maxAge: 3600
+      default-filters:
+        - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials
+      # --- CORS 설정 끝 ---
       # globalcors:
       #   cors-configurations:
       #     '[/**]':
