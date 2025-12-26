@@ -14,7 +14,7 @@ spring:
           predicates:
             - Path=/api/ai/**, /api/v1/python/**
           filters:
-            # - StripPrefix=1 
+            - RewritePath=/api/ai/(?<segment>.*), /api/${segment} 
 
         # Java Backend Service
         - id: backend-service
