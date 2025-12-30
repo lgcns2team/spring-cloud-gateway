@@ -12,7 +12,7 @@ spring:
         - id: ai-service
           uri: http://${DJANGO_HOST:localhost}:${DJANGO_PORT:8000}
           predicates:
-            - Path=/api/ai/**, /api/v1/python/**
+            - Path=/api/ai/**
           filters:
             - RewritePath=/api/ai/(?<segment>.*), /api/${segment}
 
@@ -20,20 +20,17 @@ spring:
         - id: backend-service
           uri: http://${BACKEND_HOST:localhost}:${BACKEND_PORT:8081}
           predicates:
-            - Path=/api/**, /auth/**
-          filters: []
+            - Path=/api/**,/auth/**
 
       default-filters:
         - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials
 
-  # Redis (Rate Limiting)
   data:
     redis:
       host: ${REDIS_HOST:localhost}
       port: ${REDIS_PORT:6379}
       timeout: 2000ms
 
-# Actuator
 management:
   endpoints:
     web:
@@ -42,6 +39,10 @@ management:
   endpoint:
     health:
       show-details: always
+
+logging:
+  level:
+    org.springframework.cloud.gateway: DEBUG
 
 jwt:
   secret: ${JWT_SECRET_KEY}

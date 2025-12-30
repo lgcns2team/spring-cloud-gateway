@@ -16,25 +16,34 @@ RUN chmod +x ./gradlew
 # 의존성 다운로드 (캐시 활용)
 RUN ./gradlew dependencies --no-daemon || true
 
-# 소스 코드 복사
+# 소스 코드 복사 (resources 포함!)
 COPY src ./src
 
+# 리소스 파일 확인 (디버깅용)
+RUN ls -la src/main/resources/
+
 # 애플리케이션 빌드
-RUN ./gradlew bootJar -x test --no-daemon
+RUN ./gradlew clean bootJar -x test --no-daemon
+
+# 빌드 결과 확인 (디버깅용)
+RUN ls -la build/libs/
+RUN jar -tf build/libs/*.jar | grep application || echo "WARNING: application.yml not found!"
 
 # Runtime Stage
 FROM eclipse-temurin:17-jre-jammy
 
 WORKDIR /app
 
-# curl 설치 (헬스체크용)
-RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
+# curl과 unzip 설치 (헬스체크 및 디버깅용)
+RUN apt-get update && \
+    apt-get install -y curl unzip && \
+    rm -rf /var/lib/apt/lists/*
 
 # 보안을 위해 non-root 유저로 실행
 RUN groupadd -r spring && useradd -r -g spring spring
 
-# 빌드된 JAR 파일 복사
-COPY --from=builder /app/build/libs/*.jar app.jar
+# 빌드된 JAR 파일 복사 (명시적으로 bootJar만)
+COPY --from=builder /app/build/libs/*-SNAPSHOT.jar app.jar
 
 # 소유권 변경
 RUN chown spring:spring app.jar
