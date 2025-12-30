@@ -50,7 +50,8 @@ public class SecurityConfig {
                                                 // FIX: Add /api/** (risky?) or specific login path /api/user/login to
                                                 // permitAll.
                                                 .pathMatchers("/api/user/login", "/api/user/signup", "/auth/**",
-                                                                "/public/**", "/api/countries/**", "/api/ws-stomp/**")
+                                                                "/public/**", "/api/countries/**", "/api/ws-stomp/**",
+                                                                "/api/trades/**", "/api/wars/**", "/api/main-event")
                                                 .permitAll()
                                                 .anyExchange().authenticated())
                                 .addFilterAt(jwtFilter, SecurityWebFiltersOrder.AUTHENTICATION)
