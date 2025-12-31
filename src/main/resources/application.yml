@@ -16,6 +16,13 @@ spring:
           filters:
             - RewritePath=/api/ai/(?<segment>.*), /api/${segment}
 
+        # TTS Service (AI)
+        - id: tts-service
+          uri: http://${DJANGO_HOST:localhost}:${DJANGO_PORT:8000}
+          predicates:
+            - Method=POST
+            - Path=/api/prompt/speak/**
+
         # Java Backend Service
         - id: backend-service
           uri: http://${BACKEND_HOST:localhost}:${BACKEND_PORT:8081}
