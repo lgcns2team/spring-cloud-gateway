@@ -50,6 +50,9 @@ management:
 logging:
   level:
     org.springframework.cloud.gateway: DEBUG
+    org.springframework.web.reactive: DEBUG
+    reactor.netty.http.client: DEBUG
+    reactor.netty.http.server: DEBUG
 
 jwt:
   secret: ${JWT_SECRET_KEY}
