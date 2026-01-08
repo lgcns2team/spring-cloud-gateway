@@ -16,12 +16,19 @@ spring:
           filters:
             - RewritePath=/api/ai/(?<segment>.*), /api/${segment}
 
-        # TTS Service (AI)
+        # TTS Service (AI Character)
         - id: tts-service
           uri: http://${DJANGO_HOST:localhost}:${DJANGO_PORT:8000}
           predicates:
             - Method=POST
             - Path=/api/prompt/speak/**
+
+        # 🆕 Chatbot TTS Service (Knowledge)
+        - id: chatbot-tts-service
+          uri: http://${DJANGO_HOST:localhost}:${DJANGO_PORT:8000}
+          predicates:
+            - Method=POST
+            - Path=/api/knowledge/speak/**
 
         # Java Backend Service
         - id: backend-service
