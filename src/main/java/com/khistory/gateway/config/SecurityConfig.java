@@ -51,7 +51,8 @@ public class SecurityConfig {
                                                 // permitAll.
                                                 .pathMatchers("/api/user/login", "/api/user/signup", "/auth/**",
                                                                 "/public/**", "/api/countries/**", "/api/ws-stomp/**",
-                                                                "/api/trades/**", "/api/wars/**", "/api/main-event")
+                                                                "/api/trades/**", "/api/wars/**", "/api/main-event",
+                                                                "/api/capitals/**")
                                                 .permitAll()
                                                 .anyExchange().authenticated())
                                 .addFilterAt(jwtFilter, SecurityWebFiltersOrder.AUTHENTICATION)
